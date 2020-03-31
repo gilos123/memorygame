@@ -1,0 +1,10 @@
+.gametable {
+    display: flex;
+    justify-content: center;
+    /*flex-direction: column;*/
+    /*align-content: center;*/
+}
+.gamebutton {
+    display: flex;
+    justify-content: center;
+}

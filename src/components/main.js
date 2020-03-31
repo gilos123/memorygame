@@ -13,7 +13,7 @@ class MemoryGame extends React.Component {
         currentId:null,
         result:0,
         tries:0,
-        min:Infinity,
+        min:100,
         timerflag:0
     }
 
@@ -37,12 +37,6 @@ class MemoryGame extends React.Component {
         return array
     }
 
-    // win() {
-    //     if(this.state.result === 8) {
-    //         this.setState({min:Math.min(this.state.min, this.state.tries)})
-    //         this.state.Pictures.clicked = false;
-    //     }
-    // }
 
     reset() {
         const array = this.shuffleArray(this.state.Pictures) // not change the min
@@ -54,8 +48,7 @@ class MemoryGame extends React.Component {
 
 
     handleClick(event, id, clicked) {
-        if(this.state.timerflag === 0) {
-            // this.win() //only check if won one click  after winning NEED FIX
+        if(this.state.timerflag === 0 && clicked === false ) {
             let item = [...this.state.changerPic];
             item[id-1] = this.state.Pictures[id-1].image
             this.setState({changerPic:item})
@@ -64,41 +57,44 @@ class MemoryGame extends React.Component {
                 let pic = this.state.Pictures[id-1].image
                 let Id = this.state.Pictures[id-1].id
                 this.setState({turn:1, current:pic, currentId:Id}) 
-            } else {
-                if(this.state.current === this.state.Pictures[id-1].image) {  
-                    
-                    this.setState({result:this.state.result+1})
-                    // update [icture that from now on it shoud be visible]
-                    let pics = [...Pictures]
-                    pics[id-1].clicked = true; 
-                    pics[this.state.currentId -1].clicked = true;
-                    this.setState({Pictures:pics})
+                this.setState({tries:this.state.tries+1})
+            } else if(this.state.currentId !== id)  {
+                    this.setState({turn:0}) 
+                    if(this.state.current === this.state.Pictures[id-1].image ) {  
+                        
+                        ///this.setState({result:this.state.result+1})
+                        // update [icture that from now on it shoud be visible]
+                        let pics = [...Pictures]
+                        pics[id-1].clicked = true; 
+                        pics[this.state.currentId -1].clicked = true;
+                        this.setState({Pictures:pics, result:this.state.result+1})
 
 
-                    //set the two picturesfor render ON
-                    // maybe bug because fixing
-                    let item = [...this.state.changerPic];
-                    item[id-1] = this.state.Pictures[id-1].image
-                    item[this.state.currentId-1] = this.state.Pictures[this.state.currentId-1].image
-                    this.setState({changerPic:item})
+                        //set the two picturesfor render ON
+                        // maybe bug because fixing
+                        let item = [...this.state.changerPic];
+                        item[id-1] = this.state.Pictures[id-1].image
+                        //item[this.state.currentId-1] = this.state.Pictures[this.state.currentId-1].image
+                        this.setState({changerPic:item})
 
-                } else {
-                    this.setState({timerflag:1})
-                    setTimeout(()=>{
+                    } else {
+                        this.setState({timerflag:1})
+                        setTimeout(()=>{
 
-                        let items = [...this.state.changerPic];
-                        items[id-1] = Square;
-                        items[this.state.currentId -1] = Square;
-                        this.setState({changerPic:items});
+                            let items = [...this.state.changerPic];
+                            items[id-1] = Square;
+                            items[this.state.currentId -1] = Square;
+                            this.setState({changerPic:items});
 
-                        this.setState({timerflag:0})
-                    }, 1000)
-                    
-        
+                            this.setState({timerflag:0})
+                        }, 1000)
+                        
+            
+                    }
+                    this.setState({current:''}) 
+                    this.setState({tries:this.state.tries+1})
                 }
-                this.setState({turn:0, current:''}) 
-            }
-            this.setState({tries:this.state.tries+1})
+            
         }
     }
         
